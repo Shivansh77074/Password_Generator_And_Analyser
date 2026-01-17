@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Secure Password Utility</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🔐 Secure Password Utility</h1>
+            <div class="header-actions">
+                <button id="theme-toggle" class="btn-icon" title="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="tab-navigation">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="generator">
+                    <span class="tab-icon">🔐</span>
+                    <span>Password Generator</span>
+                </button>
+                <button class="tab-btn" data-tab="analyzer">
+                    <span class="tab-icon">🔍</span>
+                    <span>Password Analyzer</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <div id="generator-tab" class="tab-content active">
+                <section class="card generator-section">
+                    <div class="card-header">
+                        <h2>Password Generator</h2>
+                        <p class="subtitle">Generate cryptographically secure passwords</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="length-slider" class="form-label">
+                                Password Length: <span id="length-value" class="value-display">16</span>
+                            </label>
+                            <input type="range" id="length-slider" class="slider" 
+                                   min="4" max="64" value="16" step="1">
+                            <div class="slider-labels">
+                                <span>4</span>
+                                <span>64</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Character Sets</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="opt-uppercase" checked>
+                                    Uppercase (A-Z)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="opt-lowercase" checked>
+                                    Lowercase (a-z)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="opt-numbers" checked>
+                                    Numbers (0-9)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="opt-symbols" checked>
+                                    Symbols (!@#$...)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="entropy-display">
+                            <span class="entropy-label">Entropy:</span>
+                            <span id="entropy-value" class="entropy-value">0.0 bits</span>
+                            <span id="entropy-rating" class="entropy-rating">(Not calculated)</span>
+                        </div>
+
+                        <div class="password-display-group">
+                            <div class="password-display">
+                                <input type="text" id="generated-password" class="password-input" 
+                                       readonly placeholder="Click 'Generate' to create a password">
+                                <button id="copy-btn" class="btn-icon" title="Copy" disabled>📋</button>
+                                <button id="visibility-toggle" class="btn-icon" title="Toggle" disabled>👁️</button>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button id="generate-btn" class="btn btn-primary btn-large">
+                                Generate Password
+                            </button>
+                            <button id="bulk-generate-btn" class="btn btn-secondary">
+                                Generate Multiple
+                            </button>
+                        </div>
+
+                        <div id="copy-feedback" class="feedback-message hidden">✓ Copied!</div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="analyzer-tab" class="tab-content">
+                <section class="card analyzer-section">
+                    <div class="card-header">
+                        <h2>Password Analyzer</h2>
+                        <p class="subtitle">Analyze password strength and security</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="analyze-input" class="form-label">Enter password to analyze</label>
+                            <div class="password-input-group">
+                                <input type="password" id="analyze-input" class="input" 
+                                       placeholder="Type or paste password here">
+                                <button id="analyze-visibility-toggle" class="btn-icon" title="Toggle">👁️</button>
+                                <button id="clear-analyze-btn" class="btn-icon" title="Clear">✕</button>
+                            </div>
+                        </div>
+
+                        <div id="strength-meter" class="strength-meter hidden">
+                            <div class="strength-meter-label">
+                                <span>Strength:</span>
+                                <span id="strength-text" class="strength-text">Unknown</span>
+                            </div>
+                            <div class="strength-bar-container">
+                                <div id="strength-bar" class="strength-bar" div>
+                            </div>
+                            <div class="strength-score">
+                                Score: <span id="strength-score">0</span>/100
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button id="analyze-btn" class="btn btn-primary btn-large">
+                                Analyze Password
+                            </button>
+                        </div>
+
+                        <div id="analysis-results" class="analysis-results hidden"></div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="bulk-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Generate Multiple Passwords</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="bulk-count">Number of passwords (1-50):</label>
+                            <input type="number" id="bulk-count" class="input" 
+                                   min="1" max="50" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="bulk-length" class="form-label">
+                                Password Length: <span id="bulk-length-value"  class="value-display" >16</span>
+                            </label>  
+                            <input type="range" id="bulk-length" class="slider" 
+                                   min="4" max="64" value="16" step="1">
+                            <div class="slider-labels">
+                                <span>4</span>     
+                                <span>64</span>
+                            </div>
+                        </div>
+                        <button id="bulk-generate-confirm" class="btn btn-primary">Generate</button>
+                    </div>
+                    <div id="bulk-results" class="bulk-results hidden"></div>
+                </div>
+            </div>
+
+            <div class="security-notice">
+                <p>🔒 <strong>Privacy Guarantee:</strong> All operations in-memory only. 
+                No passwords stored or logged.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Secure Password Utility | Enterprise-Grade Security</p>
+            <p class="footer-links">
+                <a href="#" onclick="showAbout(); return false;">About</a> | 
+                <a href="#" onclick="showPrivacy(); return false;">Privacy</a>
+            </p>
+        </div>
+    </footer>
+
+    <div id="notification-container"></div>
+
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/generator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/analyzer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

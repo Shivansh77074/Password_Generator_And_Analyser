@@ -1,0 +1,36 @@
+"""
+COMPLETE WEB APPLICATION STRUCTURE
+====================================
+
+password_utility_web/
+├── app.py                          # Flask application (MODIFIED)
+├── requirements.txt                # Web dependencies (NEW)
+├── config/
+│   └── web_settings.py            # Web-specific config (NEW)
+├── src/
+│   ├── api/                       # API layer (NEW)
+│   │   ├── __init__.py
+│   │   ├── routes.py              # API endpoints
+│   │   ├── middleware.py          # Security middleware
+│   │   └── validators.py          # Request validation
+│   ├── core/                      # Keep existing
+│   ├── generator/                 # Keep existing
+│   ├── analyzer/                  # Keep existing
+│   └── validator/                 # Keep existing
+├── static/                        # Frontend assets (NEW)
+│   ├── css/
+│   │   ├── main.css              # Main stylesheet
+│   │   ├── themes.css            # Dark/Light themes
+│   │   └── animations.css        # CSS animations
+│   ├── js/
+│   │   ├── app.js                # Main application
+│   │   ├── generator.js          # Generator logic
+│   │   ├── analyzer.js           # Analyzer logic
+│   │   ├── ui.js                 # UI interactions
+│   │   └── utils.js              # Utilities
+│   └── images/
+│       └── favicon.ico
+└── templates/                     # HTML templates (NEW)
+    └── index.html                # Single-page app
+
+"""
